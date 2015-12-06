@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * getlicense.io
+ * Copyright (C) 2013-2014 klicap - ingeniería del puzle
+ *
+ * $Id: ProductMapper.xml 383 2015-04-05 11:37:55Z recena $
+ */
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductMapper">
+
+    <resultMap id="ProductResultMap" type="Product">
+        <result property="id" column="ID" />
+        <result property="name" column="NAME" />
+        <result property="deletion" column="DELETION" />
+        <result property="publicKey" column="PUBLIC_KEY" />
+        <result property="privateKey" column="PRIVATE_KEY" />
+        <association property="owner" javaType="User" column="USER_ID_PK" select="UserMapper.byId" />
+    </resultMap>
+
+    <!-- CRUD -->
+    <select id="byId" parameterType="map" resultMap="ProductResultMap">
+        SELECT * FROM GL_PRODUCT WHERE ID = #{id} AND DELETION IS NULL AND USER_ID_PK = #{owner.id}
+    </select>
+
+    <select id="all" parameterType="map" resultMap="ProductResultMap">
+        SELECT * FROM GL_PRODUCT WHERE DELETION IS NULL AND USER_ID_PK = #{owner.id}
+    </select>
+
+    <delete id="delete" parameterType="map">
+        UPDATE GL_PRODUCT SET DELETION = UNIX_TIMESTAMP() WHERE ID = #{id} AND USER_ID_PK = #{owner.id}
+    </delete>
+
+    <insert id="insert" parameterType="Product" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO GL_PRODUCT (NAME, USER_ID_PK, PRIVATE_KEY, PUBLIC_KEY) VALUES
+            (#{name}, #{owner.id}, #{privateKey}, #{publicKey})
+    </insert>
+
+    <update id="update" parameterType="Product">
+        UPDATE GL_PRODUCT SET NAME = #{name} WHERE ID = #{id} AND USER_ID_PK = #{owner.id}
+    </update>
+
+    <!-- this query is not considering the deletion date  -->
+    <select id="internalById" parameterType="map" resultMap="ProductResultMap">
+        SELECT * FROM GL_PRODUCT WHERE ID = #{id} AND USER_ID_PK = #{owner.id}
+    </select>
+</mapper>

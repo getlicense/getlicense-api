@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * getlicense.io
+ * Copyright (C) 2013-2014 klicap - ingeniería del puzle
+ *
+ * $Id: LicenseMapper.xml 287 2014-10-26 16:10:30Z recena $
+ */
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LicenseMapper">
+
+    <resultMap id="LicenseResultMap" type="License">
+        <result property="id" column="ID" />
+        <result property="creation" column="CREATION" />
+        <result property="expiration" column="EXPIRATION" />
+        <result property="uuid" column="UUID" />
+        <association property="customer" javaType="Customer" column="{ id = CUSTOMER_ID_PK, owner.id = USER_ID_PK }" select="CustomerMapper.internalById" />
+        <association property="product" javaType="Product" column="{ id = PRODUCT_ID_PK, owner.id = USER_ID_PK }" select="ProductMapper.internalById" />
+        <association property="owner" javaType="User" column="USER_ID_PK" select="UserMapper.byId" />
+        <collection property="properties" column="ID" select="PropertyMapper.byLicense" />
+    </resultMap>
+
+    <!-- CRUD -->
+    <select id="byId" parameterType="map" resultMap="LicenseResultMap">
+        SELECT * FROM GL_LICENSE WHERE ID = #{id} AND USER_ID_PK = #{owner.id}
+    </select>
+
+    <select id="byUUID" parameterType="map" resultMap="LicenseResultMap">
+        SELECT * FROM GL_LICENSE WHERE UUID = #{uuid} AND USER_ID_PK = #{owner.id}
+    </select>
+
+    <select id="all" parameterType="map" resultMap="LicenseResultMap">
+        SELECT * FROM GL_LICENSE WHERE USER_ID_PK = #{owner.id}
+    </select>
+
+    <select id="byCustomer" parameterType="map" resultMap="LicenseResultMap">
+        SELECT * FROM GL_LICENSE WHERE CUSTOMER_ID_FK = #{id} AND USER_ID_PK = #{owner.id}
+    </select>
+
+    <delete id="delete" parameterType="map">
+        DELETE FROM GL_LICENSE WHERE ID = #{id} AND USER_ID_PK = #{owner.id}
+    </delete>
+
+    <insert id="insert" parameterType="License" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO GL_LICENSE
+            (CREATION, EXPIRATION, UUID, CUSTOMER_ID_PK, PRODUCT_ID_PK, USER_ID_PK)
+        VALUES
+            (#{creation}, #{expiration}, #{uuid}, #{customer.id}, #{product.id}, #{owner.id})
+    </insert>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * getlicense.io
+ * Copyright (C) 2013-2015 klicap - ingeniería del puzle
+ *
+ * $Id: mybatis-config.xml 385 2015-04-12 20:54:12Z recena $
+ */
+-->
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias type="es.klicap.getlicense.model.License" alias="License" />
+        <typeAlias type="es.klicap.getlicense.model.Customer" alias="Customer" />
+        <typeAlias type="es.klicap.getlicense.model.LicenseType" alias="LicenseType" />
+        <typeAlias type="es.klicap.getlicense.model.Product" alias="Product" />
+        <typeAlias type="es.klicap.getlicense.model.Property" alias="Property" />
+        <typeAlias type="es.klicap.getlicense.model.Attribute" alias="Attribute" />
+        <typeAlias type="es.klicap.getlicense.model.User" alias="User" />
+        <typeAlias type="es.klicap.getlicense.model.ApiKey" alias="ApiKey" />
+    </typeAliases>
+    <mappers>
+        <mapper resource="mappers/CustomerMapper.xml" />
+        <mapper resource="mappers/LicenseMapper.xml" />
+        <mapper resource="mappers/LicenseTypeMapper.xml" />
+        <mapper resource="mappers/ProductMapper.xml" />
+        <mapper resource="mappers/AttributeMapper.xml" />
+        <mapper resource="mappers/UserMapper.xml" />
+        <mapper resource="mappers/PropertyMapper.xml" />
+        <mapper resource="mappers/ApiKeyMapper.xml" />
+    </mappers>
+</configuration>

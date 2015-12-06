@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * getlicense.io
+ * Copyright (C) 2013-2014 klicap - ingeniería del puzle
+ *
+ * $Id: CustomerMapper.xml 287 2014-10-26 16:10:30Z recena $
+ */
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CustomerMapper">
+
+    <resultMap id="CustomerResultMap" type="Customer">
+        <result property="id" column="ID" />
+        <result property="company" column="COMPANY" />
+        <result property="fname" column="FIRST_NAME" />
+        <result property="lname" column="LAST_NAME" />
+        <result property="street" column="STREET" />
+        <result property="postalCode" column="POSTAL_CODE" />
+        <result property="city" column="CITY" />
+        <result property="state" column="STATE" />
+        <result property="country" column="COUNTRY" />
+        <result property="email" column="EMAIL" />
+        <result property="web" column="WEB" />
+        <result property="taxid" column="TAXID" />
+        <result property="deletion" column="DELETION" />
+        <association property="owner" javaType="User" column="USER_ID_PK" select="UserMapper.byId" />
+    </resultMap>
+
+    <!-- CRUD -->
+    <select id="byId" parameterType="map" resultMap="CustomerResultMap">
+        SELECT * FROM GL_CUSTOMER WHERE ID = #{id} AND DELETION IS NULL AND USER_ID_PK = #{owner.id}
+    </select>
+
+    <select id="all" parameterType="map" resultMap="CustomerResultMap">
+        SELECT * FROM GL_CUSTOMER WHERE DELETION IS NULL AND USER_ID_PK = #{owner.id};
+    </select>
+
+    <delete id="delete" parameterType="map">
+        UPDATE GL_CUSTOMER SET DELETION = UNIX_TIMESTAMP() WHERE ID = #{id} AND USER_ID_PK = #{owner.id};
+    </delete>
+
+    <insert id="insert" parameterType="Customer" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO GL_CUSTOMER
+            (COMPANY, FIRST_NAME, LAST_NAME, STREET, POSTAL_CODE, CITY, STATE, COUNTRY, EMAIL, WEB, TAXID, USER_ID_PK)
+        VALUES
+            (#{company}, #{fname}, #{lname}, #{street}, #{postalCode}, #{city}, #{state}, #{country}, #{email}, #{web}, #{taxid}, #{owner.id})
+    </insert>
+
+    <update id="update" parameterType="Customer">
+        UPDATE GL_CUSTOMER SET
+            COMPANY = #{company}, FIRST_NAME = #{fname}, LAST_NAME = #{lname}, STREET = #{street}, POSTAL_CODE = #{postalCode}, CITY = #{city}, STATE = #{state}, COUNTRY = #{country}, EMAIL = #{email}, WEB = #{web}, TAXID = #{taxid}
+        WHERE
+            ID = #{id} AND USER_ID_PK = #{owner.id}
+    </update>
+
+    <!-- this query not consider deletion date  -->
+    <select id="internalById" parameterType="map" resultMap="CustomerResultMap">
+        SELECT * FROM GL_CUSTOMER WHERE ID = #{id} AND USER_ID_PK = #{owner.id}
+    </select>
+</mapper>

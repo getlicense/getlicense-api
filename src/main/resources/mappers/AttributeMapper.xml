@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * getlicense.io
+ * Copyright (C) 2013-2014 klicap - ingeniería del puzle
+ *
+ * $Id: AttributeMapper.xml 289 2014-10-26 17:22:24Z recena $
+ */
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AttributeMapper">
+
+    <resultMap id="AttributeResultMap" type="Attribute">
+        <result property="id" column="ID" />
+        <result property="name" column="NAME" />
+        <result property="licenseTypeIdPk" column="LICENSETYPE_ID_PK" />
+    </resultMap>
+
+    <!-- CRUD -->
+    <select id="byLicenseType" parameterType="long" resultType="String">
+        SELECT NAME FROM GL_ATTRIBUTE WHERE LICENSETYPE_ID_PK = #{id};
+    </select>
+
+    <insert id="insert" parameterType="Attribute" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO GL_ATTRIBUTE
+            (NAME, LICENSETYPE_ID_PK)
+        VALUES
+            (#{name}, #{licenseTypeIdPk})
+    </insert>
+
+    <delete id="deleteByLicenseType" parameterType="long">
+        DELETE FROM GL_ATTRIBUTE WHERE LICENSETYPE_ID_PK = #{id}
+    </delete>
+</mapper>

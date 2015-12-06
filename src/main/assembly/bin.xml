@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * getlicense.io
+ * Copyright (C) 2014 klicap - ingeniería del puzle
+ *
+ * $Id: bin.xml 386 2015-04-12 21:00:59Z recena $
+ */
+-->
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+
+    <id>bin</id>
+    <formats>
+        <format>zip</format>
+        <format>tar.gz</format>
+    </formats>
+    <baseDirectory>api-${project.version}</baseDirectory>
+
+    <fileSets>
+        <fileSet>
+            <directory>src/main/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <directoryMode>755</directoryMode>
+            <fileMode>744</fileMode>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/resources</directory>
+            <outputDirectory>conf</outputDirectory>
+            <directoryMode>755</directoryMode>
+            <filtered>true</filtered>
+            <includes>
+                <include>config.json</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/main/config</directory>
+            <outputDirectory>conf</outputDirectory>
+            <directoryMode>755</directoryMode>
+            <filtered>true</filtered>
+            <includes>
+                <include>c3p0-config.xml</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>target</directory>
+            <outputDirectory>modules</outputDirectory>
+            <directoryMode>755</directoryMode>
+            <filtered>false</filtered>
+            <includes>
+                <include>*-mod.zip</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>logs</outputDirectory>
+            <directoryMode>755</directoryMode>
+            <excludes>
+                <exclude>**/*</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <outputDirectory>temp</outputDirectory>
+            <directoryMode>755</directoryMode>
+            <excludes>
+                <exclude>**/*</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+</assembly>

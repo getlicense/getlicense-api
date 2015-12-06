@@ -1,0 +1,19 @@
+{
+    "server": {
+        "host": "${api.host}",
+        "port": ${api.port},
+        "api_version": "${project.version}",
+        "api_revision": "${buildNumber}"
+    },
+    "smtp": {
+        "host": "in.mailjet.com",
+        "port": 587,
+        "username": "2b3145d06655d8a815d8621f7a04002a",
+        "password": "5fb4fd514f6eebb03ca84fa437602736"
+    },
+    "db": {
+        "url": "${jdbc.url}",
+        "username": "${jdbc.username}",
+        "password": "${jdbc.password}"
+    }
+}

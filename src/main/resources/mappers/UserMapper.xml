@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * getlicense.io
+ * Copyright (C) 2013 klicap - ingeniería del puzle
+ *
+ * $Id: UserMapper.xml 292 2014-10-26 21:05:05Z recena $
+ */
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UserMapper">
+
+    <resultMap id="UserResultMap" type="User">
+        <result property="id" column="ID" />
+        <result property="username" column="USERNAME" />
+        <result property="email" column="EMAIL" />
+        <result property="creation" column="CREATION" />
+        <result property="deletion" column="DELETION" />
+        <result property="apikey" column="APIKEY" />
+        <result property="password" column="HASHED_PASSWD" />
+    </resultMap>
+
+    <!-- CRUD -->
+    <select id="byId" parameterType="long" resultType="User">
+        SELECT
+            U.ID, U.USERNAME, U.EMAIL, U.CREATION, U.DELETION, A.APIKEY
+        FROM
+            GL_USER U, GL_APIKEY A
+        WHERE
+            U.DELETION is null and A.USER_ID_PK = U.ID and U.ID = #{id};
+    </select>
+
+    <select id="all" resultMap="UserResultMap">
+        SELECT
+            U.ID, U.USERNAME, U.EMAIL, U.CREATION, U.DELETION, A.APIKEY FROM GL_USER U, GL_APIKEY A
+        WHERE
+            U.DELETION is null and A.USER_ID_PK = U.ID;
+    </select>
+
+    <delete id="delete" parameterType="long">
+        UPDATE GL_USER SET DELETION = UNIX_TIMESTAMP() WHERE ID = #{id}
+    </delete>
+
+    <insert id="insert" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO GL_USER
+            (CREATION, USERNAME, EMAIL, HASHED_PASSWD)
+        VALUES
+            (UNIX_TIMESTAMP(), #{username}, #{email}, SHA1('getlicense'))
+    </insert>
+
+    <update id="update" parameterType="User">
+        UPDATE GL_USER SET USERNAME = #{username}, EMAIL = #{email} WHERE ID = #{id}
+    </update>
+
+    <!-- MISC -->
+    <select id="byCredentials" parameterType="map" resultType="User">
+        SELECT
+            U.ID, U.USERNAME, U.EMAIL, U.CREATION, U.DELETION, A.APIKEY
+        FROM
+            GL_USER U, GL_APIKEY A
+        WHERE
+            U.DELETION is null and A.USER_ID_PK = U.ID and U.USERNAME = #{username} AND U.HASHED_PASSWD = SHA1(#{password})
+    </select>
+</mapper>

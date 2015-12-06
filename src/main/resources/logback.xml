@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<!--
+/*
+ * getlicense.io
+ * Copyright (C) 2013-2015 klicap - ingeniería del puzle
+ *
+ * $Id: logback.xml 385 2015-04-12 20:54:12Z recena $
+ */
+-->
+<configuration debug="true">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy.MM.dd HH:mm:ss} %-5level %-30.30logger{30} %X %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="API_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${API_HOME}/logs/api.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <param name="FileNamePattern" value="${HOME}/.getlicense/getlicense.%i.log" />
+            <param name="MinIndex" value="1" />
+            <param name="MaxIndex" value="3" />
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <param name="MaxFileSize" value="5MB" />
+        </triggeringPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy.MM.dd HH:mm:ss} %-5level %-30.30logger{30} %X %msg%n</pattern>
+        </encoder>
+    </appender>
+
+     <logger name="com.mchange.v2.log.MLog" level="INFO"/>
+     <logger name="com.mchange.v2.cfg.MConfig" level="INFO"/>
+
+    <root>
+        <level value="DEBUG" />
+        <appender-ref ref="API_FILE" />
+        <!-- <appender-ref ref="CONSOLE" /> -->
+    </root>
+</configuration>

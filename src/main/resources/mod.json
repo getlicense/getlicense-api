@@ -1,0 +1,11 @@
+{
+    "main": "es.klicap.getlicense.server.Launcher",
+    "description": "Put description of your module here",
+    "licenses": ["Non-free software license"],
+    "author": "klicap - ingeniería del pulze, S.L.",
+    "developers": ["Antonio Manuel Muñiz Martín", "Manuel Jesús Recena Soto"],
+    "keywords": ["license"],
+    "homepage": "http://getlicense.io",
+
+    "auto-redeploy": ${module.auto-redeploy}
+}

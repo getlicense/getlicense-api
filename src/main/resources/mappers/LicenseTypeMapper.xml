@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * getlicense.io
+ * Copyright (C) 2013-2014 klicap - ingeniería del puzle
+ *
+ * $Id: LicenseTypeMapper.xml 288 2014-10-26 16:58:25Z recena $
+ */
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LicenseTypeMapper">
+
+    <resultMap id="LicenseTypeResultMap" type="LicenseType">
+        <result property="id" column="ID" />
+        <result property="name" column="NAME" />
+        <result property="expiration" column="DEFAULT_EXPIRATION" />
+        <association property="product" javaType="Product" column="{id=PRODUCT_ID_PK, owner.id=USER_ID_PK}" select="ProductMapper.byId" />
+        <association property="owner" javaType="User" column="USER_ID_PK" select="UserMapper.byId" />
+        <collection property="attributes" column="ID" select="AttributeMapper.byLicenseType" />
+    </resultMap>
+
+    <!--  CRUD -->
+    <select id="byId" parameterType="map" resultMap="LicenseTypeResultMap">
+        SELECT * FROM GL_LICENSETYPE WHERE ID = #{id} AND USER_ID_PK = #{owner.id}
+    </select>
+
+    <select id="byProduct" parameterType="map" resultMap="LicenseTypeResultMap">
+        SELECT * FROM GL_LICENSETYPE WHERE PRODUCT_ID_PK = #{id} AND USER_ID_PK = #{owner.id}
+    </select>
+
+    <select id="all" parameterType="map" resultMap="LicenseTypeResultMap">
+        SELECT * FROM GL_LICENSETYPE WHERE USER_ID_PK = #{owner.id}
+    </select>
+
+    <select id="countByProduct" parameterType="map" resultType="int">
+        SELECT COUNT(*) FROM GL_LICENSETYPE WHERE USER_ID_PK = #{owner.id} AND PRODUCT_ID_PK = #{id}
+    </select>
+
+    <delete id="delete" parameterType="map">
+        DELETE FROM GL_LICENSETYPE WHERE ID = #{id} AND USER_ID_PK = #{owner.id}
+    </delete>
+
+    <delete id="deleteByProduct" parameterType="map">
+        DELETE FROM GL_LICENSETYPE WHERE PRODUCT_ID_PK = #{id} AND USER_ID_PK = #{owner.id}
+    </delete>
+
+    <insert id="insert" parameterType="LicenseType" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO GL_LICENSETYPE
+            (NAME, DEFAULT_EXPIRATION, PRODUCT_ID_PK, USER_ID_PK)
+        VALUES
+            (#{name}, #{expiration}, #{product.id}, #{owner.id})
+    </insert>
+
+    <update id="update" parameterType="LicenseType">
+        UPDATE GL_LICENSETYPE SET
+            NAME = #{name}, DEFAULT_EXPIRATION = #{expiration}
+        WHERE
+            ID = #{id} AND USER_ID_PK = #{owner.id}
+    </update>
+</mapper>

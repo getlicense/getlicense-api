@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+/*
+ * getlicense.io
+ * Copyright (C) 2013-2014 klicap - ingeniería del puzle
+ *
+ * $Id: ApiKeyMapper.xml 145 2014-05-18 11:15:10Z recena $
+ */
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ApiKeyMapper">
+
+    <resultMap id="ApiKeyResultMap" type="ApiKey">
+        <result property="id" column="ID" />
+        <result property="apikey" column="APIKEY" />
+        <result property="creation" column="CREATION" />
+        <association property="user" javaType="User" column="USER_ID_PK" select="UserMapper.byId" />
+    </resultMap>
+
+    <!-- CRUD -->
+    <select id="byApiKey" parameterType="string" resultMap="ApiKeyResultMap">
+        SELECT * FROM GL_APIKEY WHERE APIKEY = #{apikey}
+    </select>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM GL_APIKEY WHERE APIKEY = #{apikey}
+    </delete>
+
+    <insert id="insert" parameterType="ApiKey" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO GL_APIKEY
+            (CREATION, APIKEY, USER_ID_PK)
+        VALUES
+            (UNIX_TIMESTAMP(), #{apikey}, #{user.id})
+    </insert>
+
+</mapper>
